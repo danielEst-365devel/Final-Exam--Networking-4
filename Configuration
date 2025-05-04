@@ -52,18 +52,22 @@ ip default-gateway 192.168.0.145
 interface FastEthernet0/1 
 switchport mode trunk 
 switchport trunk allowed vlan 10,20,30,40,99 
+switchport trunk native vlan 99 
 no shutdown
 interface FastEthernet0/2 
 switchport mode trunk 
 switchport trunk allowed vlan 10,20,30,40,99 
+switchport trunk native vlan 99 
 no shutdown
 interface FastEthernet0/3 
 switchport mode trunk 
 switchport trunk allowed vlan 10,20,30,40,99 
+switchport trunk native vlan 99 
 no shutdown
 interface FastEthernet0/4 
 switchport mode trunk 
 switchport trunk allowed vlan 10,20,30,40,99 
+switchport trunk native vlan 99 
 no shutdown
 interface FastEthernet0/5 
 switchport mode access 
@@ -77,8 +81,10 @@ write memory
 enable
 configure terminal
 hostname Floor1-Switch
-vlan 10 name FLOOR1
-vlan 99 name MANAGEMENT
+vlan 10 
+name FLOOR1
+vlan 99 
+name MANAGEMENT
 interface vlan 99 
 ip address 192.168.0.130 255.255.255.252 
 no shutdown
@@ -86,6 +92,7 @@ ip default-gateway 192.168.0.145
 interface FastEthernet0/1 
  switchport mode trunk 
  switchport trunk allowed vlan 10,99 
+ switchport trunk native vlan 99 
  no shutdown
 interface range FastEthernet0/2 - 21 
 switchport mode access 
@@ -103,8 +110,10 @@ write memory
 enable
 configure terminal
 hostname Floor2-Switch
-vlan 20 name FLOOR2
-vlan 99 name MANAGEMENT
+vlan 20 
+name FLOOR2
+vlan 99 
+name MANAGEMENT
 interface vlan 99
  ip address 192.168.0.134 255.255.255.252
  no shutdown
@@ -112,6 +121,7 @@ interface vlan 99
 interface FastEthernet0/1 
  switchport mode trunk 
  switchport trunk allowed vlan 20,99 
+ switchport trunk native vlan 99 
  no shutdown
 interface range FastEthernet0/2 - 21 
  switchport mode access 
@@ -144,6 +154,7 @@ ip default-gateway 192.168.0.145
 interface FastEthernet0/1
  switchport mode trunk
  switchport trunk allowed vlan 30,99
+ switchport trunk native vlan 99 
  no shutdown
 interface range FastEthernet0/2 - 21
  switchport mode access
@@ -172,6 +183,7 @@ ip default-gateway 192.168.0.145
 interface FastEthernet0/1
  switchport mode trunk
  switchport trunk allowed vlan 40,99
+ switchport trunk native vlan 99 
  no shutdown
 interface range FastEthernet0/2 - 21
  switchport mode access
