@@ -35,23 +35,40 @@ write memory
 enable
 configure terminal
 hostname Core-Switch
-vlan 10 name FLOOR1
-vlan 20 name FLOOR2 
-vlan 30 name FLOOR3
-vlan 40 name FLOOR4
-vlan 99 name MANAGEMENT
-interface vlan 99 ip address 192.168.0.146 255.255.255.252 no shutdown
+vlan 10 
+name FLOOR1
+vlan 20 
+name FLOOR2 
+vlan 30 
+name FLOOR3
+vlan 40 
+name FLOOR4
+vlan 99 
+name MANAGEMENT
+interface vlan 99 
+ip address 192.168.0.146 255.255.255.252 
+no shutdown
 ip default-gateway 192.168.0.145
-interface FastEthernet0/1 switchport mode trunk switchport trunk allowed vlan 10,20,30,40,99 no shutdown
-interface FastEthernet0/2 switchport mode trunk switchport trunk allowed vlan 10,20,30,40,99 no shutdown
-interface FastEthernet0/3 switchport mode trunk switchport trunk allowed vlan 10,20,30,40,99 no shutdown
-interface FastEthernet0/4 switchport mode trunk switchport trunk allowed vlan 10,20,30,40,99 no shutdown
-interface FastEthernet0/5 switchport mode access switchport access vlan 99 no shutdown
-interface FastEthernet0/6 ip address 192.168.0.129 255.255.255.252 no shutdown
-interface FastEthernet0/7 ip address 192.168.0.133 255.255.255.252 no shutdown
-interface FastEthernet0/8 ip address 192.168.0.137 255.255.255.252 no shutdown
-interface FastEthernet0/9 ip address 192.168.0.141 255.255.255.252 no shutdown
-interface FastEthernet0/10 ip address 192.168.0.150 255.255.255.252 no shutdown
+interface FastEthernet0/1 
+switchport mode trunk 
+switchport trunk allowed vlan 10,20,30,40,99 
+no shutdown
+interface FastEthernet0/2 
+switchport mode trunk 
+switchport trunk allowed vlan 10,20,30,40,99 
+no shutdown
+interface FastEthernet0/3 
+switchport mode trunk 
+switchport trunk allowed vlan 10,20,30,40,99 
+no shutdown
+interface FastEthernet0/4 
+switchport mode trunk 
+switchport trunk allowed vlan 10,20,30,40,99 
+no shutdown
+interface FastEthernet0/5 
+switchport mode access 
+switchport access vlan 99 
+no shutdown
 spanning-tree mode pvst
 end
 write memory
@@ -62,11 +79,22 @@ configure terminal
 hostname Floor1-Switch
 vlan 10 name FLOOR1
 vlan 99 name MANAGEMENT
-interface vlan 99 ip address 192.168.0.130 255.255.255.252 no shutdown
+interface vlan 99 
+ip address 192.168.0.130 255.255.255.252 
+no shutdown
 ip default-gateway 192.168.0.145
-interface FastEthernet0/1 switchport mode trunk switchport trunk allowed vlan 10,99 no shutdown
-interface range FastEthernet0/2 - 21 switchport mode access switchport access vlan 10 no shutdown
-interface FastEthernet0/4 switchport mode access switchport access vlan 10 no shutdown
+interface FastEthernet0/1 
+ switchport mode trunk 
+ switchport trunk allowed vlan 10,99 
+ no shutdown
+interface range FastEthernet0/2 - 21 
+switchport mode access 
+switchport access vlan 10 
+no shutdown
+interface FastEthernet0/4
+ switchport mode access
+ switchport access vlan 10
+ no shutdown
 spanning-tree mode pvst
 end
 write memory
@@ -77,12 +105,26 @@ configure terminal
 hostname Floor2-Switch
 vlan 20 name FLOOR2
 vlan 99 name MANAGEMENT
-interface vlan 99 ip address 192.168.0.134 255.255.255.252 no shutdown
-ip default-gateway 192.168.0.145
-interface FastEthernet0/1 switchport mode trunk switchport trunk allowed vlan 20,99 no shutdown
-interface range FastEthernet0/2 - 21 switchport mode access switchport access vlan 20 no shutdown
-interface FastEthernet0/4 switchport mode access switchport access vlan 20 no shutdown
-interface FastEthernet0/5 switchport mode access switchport access vlan 20 no shutdown
+interface vlan 99
+ ip address 192.168.0.134 255.255.255.252
+ no shutdown
+ ip default-gateway 192.168.0.145
+interface FastEthernet0/1 
+ switchport mode trunk 
+ switchport trunk allowed vlan 20,99 
+ no shutdown
+interface range FastEthernet0/2 - 21 
+ switchport mode access 
+ switchport access vlan 20 
+ no shutdown
+interface FastEthernet0/4
+ switchport mode access
+ switchport access vlan 20
+ no shutdown
+interface FastEthernet0/5
+ switchport mode access
+ switchport access vlan 20 
+ no shutdown
 spanning-tree mode pvst
 end
 write memory
@@ -91,13 +133,26 @@ write memory
 enable
 configure terminal
 hostname Floor3-Switch
-vlan 30 name FLOOR3
-vlan 99 name MANAGEMENT
-interface vlan 99 ip address 192.168.0.138 255.255.255.252 no shutdown
+vlan 30 
+name FLOOR3
+vlan 99 
+name MANAGEMENT
+interface vlan 99
+ ip address 192.168.0.138 255.255.255.252
+ no shutdown
 ip default-gateway 192.168.0.145
-interface FastEthernet0/1 switchport mode trunk switchport trunk allowed vlan 30,99 no shutdown
-interface range FastEthernet0/2 - 21 switchport mode access switchport access vlan 30 no shutdown
-interface FastEthernet0/4 switchport mode access switchport access vlan 30 no shutdown
+interface FastEthernet0/1
+ switchport mode trunk
+ switchport trunk allowed vlan 30,99
+ no shutdown
+interface range FastEthernet0/2 - 21
+ switchport mode access
+ switchport access vlan 30
+ no shutdown
+interface FastEthernet0/4
+ switchport mode access
+ switchport access vlan 30
+ no shutdown
 spanning-tree mode pvst
 end
 write memory
@@ -106,13 +161,26 @@ write memory
 enable
 configure terminal
 hostname Floor4-Switch
-vlan 40 name FLOOR4
-vlan 99 name MANAGEMENT
-interface vlan 99 ip address 192.168.0.142 255.255.255.252 no shutdown
+vlan 40 
+name FLOOR4
+vlan 99 
+name MANAGEMENT
+interface vlan 99
+ ip address 192.168.0.142 255.255.255.252
+ no shutdown
 ip default-gateway 192.168.0.145
-interface FastEthernet0/1 switchport mode trunk switchport trunk allowed vlan 40,99 no shutdown
-interface range FastEthernet0/2 - 21 switchport mode access switchport access vlan 40 no shutdown
-interface FastEthernet0/4 switchport mode access switchport access vlan 40 no shutdown
+interface FastEthernet0/1
+ switchport mode trunk
+ switchport trunk allowed vlan 40,99
+ no shutdown
+interface range FastEthernet0/2 - 21
+ switchport mode access
+ switchport access vlan 40
+ no shutdown
+interface FastEthernet0/4
+ switchport mode access
+ switchport access vlan 40
+ no shutdown
 spanning-tree mode pvst
 end
 write memory
