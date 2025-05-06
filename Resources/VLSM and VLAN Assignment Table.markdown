@@ -11,10 +11,11 @@
 | G0/1 (to ISP)           | -    | 192.168.0.154     | 255.255.255.252   | 192.168.0.153   | 192.168.0.152-155   | ISP WAN Link             |
 | **Core Switch (Cisco 2960-24TT)** |      |                   |                   |                 |                     |                          |
 | VLAN 99 Interface       | 99   | 192.168.0.146     | 255.255.255.240   | 192.168.0.145   | 192.168.0.144-159   | Management Interface     |
-| FA0/1 (to Floor 1)      | Trunk| -                 | -                 | -               | -                   | Core-to-Floor 1 Trunk    |
-| FA0/2 (to Floor 2)      | Trunk| -                 | -                 | -               | -                   | Core-to-Floor 2 Trunk    |
-| FA0/3 (to Floor 3)      | Trunk| -                 | -                 | -               | -                   | Core-to-Floor 3 Trunk    |
-| FA0/4 (to Floor 4)      | Trunk| -                 | -                 | -               | -                   | Core-to-Floor 4 Trunk    |
+| FA0/1 (to Router)       | Trunk| -                 | -                 | -               | -                   | Core-to-Router Trunk (VLANs 10,20,30,40,99 Native 99) |
+| FA0/2 (to Floor 1 Sw)   | Trunk| -                 | -                 | -               | -                   | Core-to-Floor 1 Trunk (VLANs 10,99 Native 99) |
+| FA0/3 (to Floor 2 Sw)   | Trunk| -                 | -                 | -               | -                   | Core-to-Floor 2 Trunk (VLANs 20,99 Native 99) |
+| FA0/4 (to Floor 3 Sw)   | Trunk| -                 | -                 | -               | -                   | Core-to-Floor 3 Trunk (VLANs 30,99 Native 99) |
+| FA0/5 (to Floor 4 Sw)   | Trunk| -                 | -                 | -               | -                   | Core-to-Floor 4 Trunk (VLANs 40,99 Native 99) |
 | **Floor 1 Switch (Cisco 2960-24TT)** |      |                   |                   |                 |                     |                          |
 | VLAN 99 Interface       | 99   | 192.168.0.147     | 255.255.255.240   | 192.168.0.145   | 192.168.0.144-159   | Management Interface     |
 | Floor 1 Subnet          | 10   | 192.168.0.0/26    | 255.255.255.192   | 192.168.0.1     | 192.168.0.0-63      | End Devices/Wireless     |
