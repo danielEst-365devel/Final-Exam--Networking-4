@@ -167,9 +167,9 @@ interface FastEthernet0/1
   channel-group 1 mode active
   no shutdown
 
-! Configure Fa0/22 for EtherChannel (assuming Fa0/22 is available)
+! Configure Fa0/24 for EtherChannel (assuming Fa0/24 is available)
 ! Note: Your existing config uses Fa0/2-21 for access. Fa0/22, Fa0/23, Fa0/24 might be available.
-interface FastEthernet0/22
+interface FastEthernet0/24
   description Member of Po1 to Core-Switch
   channel-protocol lacp
   channel-group 1 mode active
@@ -229,8 +229,8 @@ interface FastEthernet0/1
   channel-group 1 mode active
   no shutdown
 
-! Configure Fa0/22 for EtherChannel (assuming Fa0/22 is available)
-interface FastEthernet0/22
+! Configure Fa0/24 for EtherChannel (assuming Fa0/24 is available)
+interface FastEthernet0/24
   description Member of Po1 to Core-Switch
   channel-protocol lacp
   channel-group 1 mode active
@@ -290,8 +290,8 @@ interface FastEthernet0/1
   channel-group 1 mode active
   no shutdown
 
-! Configure Fa0/22 for EtherChannel (assuming Fa0/22 is available)
-interface FastEthernet0/22
+! Configure Fa0/24 for EtherChannel (assuming Fa0/24 is available)
+interface FastEthernet0/24
   description Member of Po1 to Core-Switch
   channel-protocol lacp
   channel-group 1 mode active
@@ -351,8 +351,8 @@ interface FastEthernet0/1
   channel-group 1 mode active
   no shutdown
 
-! Configure Fa0/22 for EtherChannel (assuming Fa0/22 is available)
-interface FastEthernet0/22
+! Configure Fa0/24 for EtherChannel (assuming Fa0/24 is available)
+interface FastEthernet0/24
   description Member of Po1 to Core-Switch
   channel-protocol lacp
   channel-group 1 mode active
