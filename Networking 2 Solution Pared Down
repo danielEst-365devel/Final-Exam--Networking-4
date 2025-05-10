@@ -1,34 +1,6 @@
-!=========================================================================
 ! Core-Switch Configuration
-!=========================================================================
 enable
 configure terminal
-hostname Core-Switch
-
-! VLAN configuration (assuming this is already in place and correct)
-vlan 10 
-  name FLOOR1
-vlan 20 
-  name FLOOR2 
-vlan 30 
-  name FLOOR3
-vlan 40 
-  name FLOOR4
-vlan 99 
-  name MANAGEMENT
-
-! Management SVI and Default Gateway (assuming this is already in place and correct)
-interface Vlan99
-  ip address 192.168.0.146 255.255.255.240
-  no shutdown
-ip default-gateway 192.168.0.145
-
-! Interface to Router (Fa0/1) - Remains unchanged as per your existing config
-interface FastEthernet0/1 
-  switchport mode trunk 
-  switchport trunk allowed vlan 10,20,30,40,99 
-  switchport trunk native vlan 99 
-  no shutdown
 
 ! --- EtherChannel to Floor1-Switch (Po1) ---
 ! Clear existing config on Fa0/2
@@ -36,14 +8,12 @@ interface FastEthernet0/2
   no switchport mode trunk
   no switchport trunk allowed vlan 10,99
   no switchport trunk native vlan 99
-  description Member of Po1 to Floor1-Switch
   channel-protocol lacp
   channel-group 1 mode active
   no shutdown
 
 ! Configure Fa0/6 for EtherChannel (assuming Fa0/6 is available)
 interface FastEthernet0/6
-  description Member of Po1 to Floor1-Switch
   channel-protocol lacp
   channel-group 1 mode active
   no shutdown
@@ -54,14 +24,12 @@ interface FastEthernet0/3
   no switchport mode trunk
   no switchport trunk allowed vlan 20,99
   no switchport trunk native vlan 99
-  description Member of Po2 to Floor2-Switch
   channel-protocol lacp
   channel-group 2 mode active
   no shutdown
 
 ! Configure Fa0/7 for EtherChannel (assuming Fa0/7 is available)
 interface FastEthernet0/7
-  description Member of Po2 to Floor2-Switch
   channel-protocol lacp
   channel-group 2 mode active
   no shutdown
@@ -72,14 +40,12 @@ interface FastEthernet0/4
   no switchport mode trunk
   no switchport trunk allowed vlan 30,99
   no switchport trunk native vlan 99
-  description Member of Po3 to Floor3-Switch
   channel-protocol lacp
   channel-group 3 mode active
   no shutdown
 
 ! Configure Fa0/8 for EtherChannel (assuming Fa0/8 is available)
 interface FastEthernet0/8
-  description Member of Po3 to Floor3-Switch
   channel-protocol lacp
   channel-group 3 mode active
   no shutdown
@@ -90,71 +56,47 @@ interface FastEthernet0/5
   no switchport mode trunk
   no switchport trunk allowed vlan 40,99
   no switchport trunk native vlan 99
-  description Member of Po4 to Floor4-Switch
   channel-protocol lacp
   channel-group 4 mode active
   no shutdown
 
 ! Configure Fa0/9 for EtherChannel (assuming Fa0/9 is available)
 interface FastEthernet0/9
-  description Member of Po4 to Floor4-Switch
   channel-protocol lacp
   channel-group 4 mode active
   no shutdown
 
 ! Port-Channel Interface Configurations
 interface Port-channel1
-  description EtherChannel to Floor1-Switch
   switchport mode trunk
   switchport trunk allowed vlan 10,99
   switchport trunk native vlan 99
   no shutdown
 
 interface Port-channel2
-  description EtherChannel to Floor2-Switch
   switchport mode trunk
   switchport trunk allowed vlan 20,99
   switchport trunk native vlan 99
   no shutdown
 
 interface Port-channel3
-  description EtherChannel to Floor3-Switch
   switchport mode trunk
   switchport trunk allowed vlan 30,99
   switchport trunk native vlan 99
   no shutdown
 
 interface Port-channel4
-  description EtherChannel to Floor4-Switch
   switchport mode trunk
   switchport trunk allowed vlan 40,99
   switchport trunk native vlan 99
   no shutdown
 
-! Spanning tree mode (assuming this is already in place)
-spanning-tree mode pvst
-
 end
 write memory
-!
-!=========================================================================
+
 ! Floor1-Switch Configuration
-!=========================================================================
 enable
 configure terminal
-hostname Floor1-Switch
-
-! VLAN configuration (assuming this is already in place and correct)
-vlan 10 
-  name FLOOR1
-vlan 99 
-  name MANAGEMENT
-
-! Management SVI and Default Gateway (assuming this is already in place and correct)
-interface Vlan99 
-  ip address 192.168.0.147 255.255.255.240 
-  no shutdown
-ip default-gateway 192.168.0.145
 
 ! --- EtherChannel to Core-Switch (Po1) ---
 ! Clear existing config on Fa0/1
@@ -162,22 +104,18 @@ interface FastEthernet0/1
   no switchport mode trunk
   no switchport trunk allowed vlan 10,99
   no switchport trunk native vlan 99
-  description Member of Po1 to Core-Switch
   channel-protocol lacp
   channel-group 1 mode active
   no shutdown
 
 ! Configure Fa0/24 for EtherChannel (assuming Fa0/24 is available)
-! Note: Your existing config uses Fa0/2-21 for access. Fa0/22, Fa0/23, Fa0/24 might be available.
 interface FastEthernet0/24
-  description Member of Po1 to Core-Switch
   channel-protocol lacp
   channel-group 1 mode active
   no shutdown
 
 ! Port-Channel Interface Configuration
 interface Port-channel1
-  description EtherChannel to Core-Switch
   switchport mode trunk
   switchport trunk allowed vlan 10,99
   switchport trunk native vlan 99
@@ -192,31 +130,12 @@ interface range FastEthernet0/2 - 21
   switchport port-security mac-address sticky
   switchport port-security violation shutdown
   no shutdown
-
-! Spanning tree mode (assuming this is already in place)
-spanning-tree mode pvst
-
 end
 write memory
-!
-!=========================================================================
+
 ! Floor2-Switch Configuration
-!=========================================================================
 enable
 configure terminal
-hostname Floor2-Switch
-
-! VLAN configuration (assuming this is already in place and correct)
-vlan 20 
-  name FLOOR2
-vlan 99 
-  name MANAGEMENT
-
-! Management SVI and Default Gateway (assuming this is already in place and correct)
-interface Vlan99
-  ip address 192.168.0.148 255.255.255.240
-  no shutdown
-ip default-gateway 192.168.0.145
 
 ! --- EtherChannel to Core-Switch (Po1 on this switch, connects to Po2 on Core) ---
 ! Clear existing config on Fa0/1
@@ -224,26 +143,21 @@ interface FastEthernet0/1
   no switchport mode trunk
   no switchport trunk allowed vlan 20,99
   no switchport trunk native vlan 99
-  description Member of Po1 to Core-Switch
   channel-protocol lacp
   channel-group 1 mode active
   no shutdown
 
 ! Configure Fa0/24 for EtherChannel (assuming Fa0/24 is available)
 interface FastEthernet0/24
-  description Member of Po1 to Core-Switch
   channel-protocol lacp
   channel-group 1 mode active
   no shutdown
-
 ! Port-Channel Interface Configuration
 interface Port-channel1
-  description EtherChannel to Core-Switch
   switchport mode trunk
   switchport trunk allowed vlan 20,99
   switchport trunk native vlan 99
   no shutdown
-
 ! Access Port Configuration with Port Security
 interface range FastEthernet0/2 - 21 
   switchport mode access 
@@ -253,31 +167,12 @@ interface range FastEthernet0/2 - 21
   switchport port-security mac-address sticky
   switchport port-security violation shutdown
   no shutdown
-
-! Spanning tree mode (assuming this is already in place)
-spanning-tree mode pvst
-
 end
 write memory
-!
-!=========================================================================
+
 ! Floor3-Switch Configuration
-!=========================================================================
 enable
 configure terminal
-hostname Floor3-Switch
-
-! VLAN configuration (assuming this is already in place and correct)
-vlan 30 
-  name FLOOR3
-vlan 99 
-  name MANAGEMENT
-
-! Management SVI and Default Gateway (assuming this is already in place and correct)
-interface Vlan99
-  ip address 192.168.0.149 255.255.255.240
-  no shutdown
-ip default-gateway 192.168.0.145
 
 ! --- EtherChannel to Core-Switch (Po1 on this switch, connects to Po3 on Core) ---
 ! Clear existing config on Fa0/1
@@ -285,21 +180,18 @@ interface FastEthernet0/1
   no switchport mode trunk
   no switchport trunk allowed vlan 30,99
   no switchport trunk native vlan 99
-  description Member of Po1 to Core-Switch
   channel-protocol lacp
   channel-group 1 mode active
   no shutdown
 
 ! Configure Fa0/24 for EtherChannel (assuming Fa0/24 is available)
 interface FastEthernet0/24
-  description Member of Po1 to Core-Switch
   channel-protocol lacp
   channel-group 1 mode active
   no shutdown
 
 ! Port-Channel Interface Configuration
 interface Port-channel1
-  description EtherChannel to Core-Switch
   switchport mode trunk
   switchport trunk allowed vlan 30,99
   switchport trunk native vlan 99
@@ -315,30 +207,13 @@ interface range FastEthernet0/2 - 21
   switchport port-security violation shutdown
   no shutdown
 
-! Spanning tree mode (assuming this is already in place)
-spanning-tree mode pvst
-
 end
 write memory
-!
-!=========================================================================
+
+
 ! Floor4-Switch Configuration
-!=========================================================================
 enable
 configure terminal
-hostname Floor4-Switch
-
-! VLAN configuration (assuming this is already in place and correct)
-vlan 40 
-  name FLOOR4
-vlan 99 
-  name MANAGEMENT
-
-! Management SVI and Default Gateway (assuming this is already in place and correct)
-interface Vlan99
-  ip address 192.168.0.150 255.255.255.240
-  no shutdown
-ip default-gateway 192.168.0.145
 
 ! --- EtherChannel to Core-Switch (Po1 on this switch, connects to Po4 on Core) ---
 ! Clear existing config on Fa0/1
@@ -346,21 +221,18 @@ interface FastEthernet0/1
   no switchport mode trunk
   no switchport trunk allowed vlan 40,99
   no switchport trunk native vlan 99
-  description Member of Po1 to Core-Switch
   channel-protocol lacp
   channel-group 1 mode active
   no shutdown
 
 ! Configure Fa0/24 for EtherChannel (assuming Fa0/24 is available)
 interface FastEthernet0/24
-  description Member of Po1 to Core-Switch
   channel-protocol lacp
   channel-group 1 mode active
   no shutdown
 
 ! Port-Channel Interface Configuration
 interface Port-channel1
-  description EtherChannel to Core-Switch
   switchport mode trunk
   switchport trunk allowed vlan 40,99
   switchport trunk native vlan 99
@@ -376,8 +248,55 @@ interface range FastEthernet0/2 - 21
   switchport port-security violation shutdown
   no shutdown
 
-! Spanning tree mode (assuming this is already in place)
-spanning-tree mode pvst
-
 end
 write memory
+
+
+!Home Switch Configuration
+enable
+configure terminal
+interface range FastEthernet0/1-3
+  switchport mode access
+  switchport port-security
+  switchport port-security maximum 1
+  switchport port-security mac-address sticky
+  switchport port-security violation shutdown
+  no shutdown
+end
+write memory
+
+!Floors 1-4 Switch Configurations (Will need if ACCESS Point switches shut down.)
+
+!Floor 1 and Floor 3 Switch Configuration
+enable
+conf t
+int fa0/4
+no switchport port-security
+no switchport port-security maximum 1
+no switchport port-security mac-address sticky
+no switchport port-security violation shutdown
+shutdown
+no shutdown
+end
+
+!Floor 2 Switch Configuration
+enable
+conf t
+int fa0/5
+no switchport port-security maximum 1
+no switchport port-security mac-address sticky
+no switchport port-security violation shutdown
+shutdown
+no shutdown
+end
+
+!Floor 4 Switch Configuration
+enable
+conf t
+int fa0/3
+no switchport port-security maximum 1
+no switchport port-security mac-address sticky
+no switchport port-security violation shutdown
+shutdown
+no shutdown
+end
