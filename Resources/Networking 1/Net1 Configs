@@ -206,4 +206,6 @@ hostname Home-Router
 interface GigabitEthernet0/0
 ip address 192.168.254.254 255.255.255.0
  no shutdown
+end
+write memory
 !Refer to the screenshot in the RESOURCES folder for the DHCP configuration.
