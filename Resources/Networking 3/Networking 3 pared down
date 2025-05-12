@@ -38,6 +38,7 @@ interface Serial0/0/0.201 point-to-point
  no shutdown
 interface Serial0/0/0.203 point-to-point
  ip address 10.0.3.1 255.255.255.252
+ frame-relay interface-dlci 203
  no shutdown
 router ospf 1
  router-id 2.2.2.2 
