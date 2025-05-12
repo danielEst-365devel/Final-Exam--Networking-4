@@ -1,7 +1,7 @@
 !=========================================================================
 ! Frame Relay Cloud Configuration (Packet Tracer)
 !=========================================================================
-! This remains the same as previously discussed and as per your screenshots:
+! This remains the same as previously discussed:
 ! 1. Cloud Device: Add Serial0, Serial1, Serial2.
 ! 2. Serial0 (Xentra Router's connection point on the cloud):
 !    - DLCI: 102, Name: XentraToHome, Add.
@@ -18,7 +18,8 @@
 !    - Serial1 DLCI 203 <--> Serial2 DLCI 302
 
 !=========================================================================
-! Xentra Router (hostname: Router) - UPDATED CONFIGURATION
+! Xentra Router (hostname: Router) - CONFIGURATION
+! (Based on your last provided snippet for this router)
 !=========================================================================
 enable
 configure terminal
@@ -39,7 +40,6 @@ interface Serial0/0/0.102 point-to-point
  description P2P Link to Home-Router via DLCI 102
  ip address 10.0.1.1 255.255.255.252
  frame-relay interface-dlci 102
- ! OSPF network type will default to point-to-point, which is desired
  no shutdown
 
 ! --- Subinterface to ISP-Router ---
@@ -49,7 +49,7 @@ interface Serial0/0/0.103 point-to-point
  frame-relay interface-dlci 103
  no shutdown
 
-! --- Existing GigabitEthernet0/0 Sub-interfaces (Assumed unchanged) ---
+! --- Existing GigabitEthernet0/0 Sub-interfaces (Assumed from previous context) ---
 interface GigabitEthernet0/0
  no shutdown
 interface GigabitEthernet0/0.10
@@ -73,7 +73,7 @@ interface GigabitEthernet0/0.99
  ip address 192.168.0.145 255.255.255.240
  no shutdown
 
-! --- Existing GigabitEthernet0/1 (Old WAN link - keep IP for reachability if needed) ---
+! --- Existing GigabitEthernet0/1 (Old WAN link - Assumed from previous context) ---
 interface GigabitEthernet0/1
  description Old WAN link or other segment
  ip address 192.168.0.154 255.255.255.252
@@ -84,7 +84,6 @@ router ospf 1
  router-id 1.1.1.1 ! Example router-id, ensure uniqueness
  log-adjacency-changes
 
- ! Advertise connected networks
  network 10.0.1.0 0.0.0.3 area 0         ! P2P to Home-Router
  network 10.0.2.0 0.0.0.3 area 0         ! P2P to ISP-Router
  network 192.168.0.0 0.0.0.63 area 0     ! VLAN 10 (FLOOR1)
@@ -94,15 +93,14 @@ router ospf 1
  network 192.168.0.144 0.0.0.15 area 0   ! VLAN 99 (MANAGEMENT)
  network 192.168.0.152 0.0.0.3 area 0    ! Gi0/1 Link (Old WAN)
 
- ! Make LAN interfaces passive for OSPF
  passive-interface GigabitEthernet0/0.10
  passive-interface GigabitEthernet0/0.20
  passive-interface GigabitEthernet0/0.30
  passive-interface GigabitEthernet0/0.40
  passive-interface GigabitEthernet0/0.99
- ! Consider if Gi0/1 should also be passive or have a specific OSPF network type
+ ! passive-interface GigabitEthernet0/1 ! Consider if this should be passive
 
-! --- DHCP Configuration (Assumed unchanged) ---
+! --- DHCP Configuration (Assumed from previous context) ---
 ip dhcp excluded-address 192.168.0.1
 ip dhcp excluded-address 192.168.0.65  
 ip dhcp excluded-address 192.168.0.129 
@@ -127,7 +125,8 @@ end
 write memory
 
 !=========================================================================
-! Home-Router - UPDATED CONFIGURATION
+! Home-Router - CONFIGURATION
+! (Based on your last provided snippet for this router)
 !=========================================================================
 enable
 configure terminal
@@ -154,7 +153,7 @@ interface Serial0/0/0.203 point-to-point
  frame-relay interface-dlci 203
  no shutdown
 
-! --- Existing LAN Interface (Assumed unchanged) ---
+! --- Existing LAN Interface (Assumed from previous context) ---
 interface GigabitEthernet0/0
  description Home LAN
  ip address 192.168.254.254 255.255.255.0
@@ -167,18 +166,18 @@ router ospf 1
  network 10.0.1.0 0.0.0.3 area 0         ! P2P to Xentra Router
  network 10.0.3.0 0.0.0.3 area 0         ! P2P to ISP-Router
  network 192.168.254.0 0.0.0.255 area 0  ! Home LAN
- passive-interface GigabitEthernet0/0    ! Good practice for LAN interfaces
+ passive-interface GigabitEthernet0/0
 end
 write memory
 
 !=========================================================================
-! New ISP-Router Configuration - UPDATED
+! ISP-Router Configuration - MODIFIED
 !=========================================================================
 enable
 configure terminal
 hostname ISP-Router
 
-! --- Physical Serial Interface Configuration ---
+! --- Physical Serial Interface Configuration (Frame Relay WAN) ---
 interface Serial0/0/0 ! Assuming Se0/0/0 is used, adjust if different
  description Physical Link to Frame Relay Cloud (ISP Port)
  encapsulation frame-relay
@@ -199,10 +198,10 @@ interface Serial0/0/0.302 point-to-point
  frame-relay interface-dlci 302
  no shutdown
 
-! --- Ethernet Interface Configuration (to Server LAN) ---
-interface GigabitEthernet0/0 ! Or whichever port you connect to the server
- description Link to Server LAN
- ip address 172.16.1.1 255.255.255.0
+! --- Ethernet Interface Configuration (Link to Internet-Router) ---
+interface GigabitEthernet0/0
+ description Link to Internet-Router
+ ip address 10.0.4.1 255.255.255.252
  no shutdown
 
 ! --- OSPF Configuration ---
@@ -211,27 +210,64 @@ router ospf 1
  log-adjacency-changes
  network 10.0.2.0 0.0.0.3 area 0         ! P2P to Xentra Router
  network 10.0.3.0 0.0.0.3 area 0         ! P2P to Home-Router
- network 172.16.1.0 0.0.0.255 area 0    ! Server LAN
- passive-interface GigabitEthernet0/0    ! Good practice for LAN interfaces
- default-information originate          ! Advertise a default route
+ network 10.0.4.0 0.0.0.3 area 0         ! Link to Internet-Router
+ default-information originate          ! Advertise a default route to Xentra & Home networks
+ ! passive-interface GigabitEthernet0/0 ! Not passive, it's an OSPF link to Internet-Router
 
-! --- Static Default Route (Simulating connection to the Internet) ---
+! --- Static Default Route (Simulating connection to the actual Internet) ---
 ! This helps OSPF's 'default-information originate' have a route to advertise.
-! Example for simulation if no "real" upstream:
 interface Loopback0
- ip address 203.0.113.1 255.255.255.255 ! A public-like IP
+ description Represents connection to upstream Internet
+ ip address 203.0.113.1 255.255.255.255 ! Example public-like IP
  no shutdown
 ip route 0.0.0.0 0.0.0.0 Loopback0
-! Or point to the next hop IP of your actual internet connection if applicable.
+! Or, if you had a real next hop: ip route 0.0.0.0 0.0.0.0 <actual_next_hop_IP>
 
 end
 write memory
 
 !=========================================================================
-! Server Configuration (Example - Unchanged)
+! Internet-Router Configuration - NEW
 !=========================================================================
-! On the Server device:
-! IP Address: 172.16.1.10
+enable
+configure terminal
+hostname Internet-Router
+
+! --- Interface to ISP-Router ---
+interface GigabitEthernet0/0
+ description Link to ISP-Router
+ ip address 10.0.4.2 255.255.255.252
+ no shutdown
+
+! --- Interface to CEU Web Server LAN ---
+interface GigabitEthernet0/1
+ description Link to CEU Web Server LAN
+ ip address 172.16.2.1 255.255.255.0
+ no shutdown
+
+! --- OSPF Configuration ---
+router ospf 1
+ router-id 4.4.4.4 ! Example router-id, ensure uniqueness
+ log-adjacency-changes
+ network 10.0.4.0 0.0.0.3 area 0         ! Link to ISP-Router
+ network 172.16.2.0 0.0.0.255 area 0    ! CEU Web Server LAN
+ ! passive-interface GigabitEthernet0/0 ! Not passive, OSPF link
+ passive-interface GigabitEthernet0/1    ! CEU Web Server LAN is a stub, no OSPF neighbors there
+
+! --- (Optional) Static route if CEU Web Server needs to reach internet directly via this router
+! --- and not rely on OSPF default from ISP router (usually not needed if ISP-Router handles all default)
+! --- If this router had its OWN internet connection, it would have a default route here.
+! --- But in this topology, it relies on the default route from ISP-Router via OSPF.
+
+end
+write memory
+
+!=========================================================================
+! CEU Web Server Configuration - UPDATED
+!=========================================================================
+! On the Server device (named CEU Web Server):
+! IP Address: 172.16.2.10
 ! Subnet Mask: 255.255.255.0
-! Default Gateway: 172.16.1.1 (ISP-Router's Gi0/0 interface)
+! Default Gateway: 172.16.2.1 (Internet-Router's Gi0/1 interface)
 ! DNS Server: (e.g., 8.8.8.8 or an internal DNS if you have one)
+!=========================================================================
