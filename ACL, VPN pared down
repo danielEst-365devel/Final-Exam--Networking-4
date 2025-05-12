@@ -36,7 +36,7 @@ enable
 configure terminal
 ip access-list extended PERMIT_GRE_FROM_HOME_IN
  permit gre host 10.0.1.2 host 10.0.1.1
- deny   ip any any log
+ deny ip any any
 interface Serial0/0/0.102
  ip access-group PERMIT_GRE_FROM_HOME_IN in
 ip access-list extended BLOCK_EXTERNAL_TO_XENTRA_IN
