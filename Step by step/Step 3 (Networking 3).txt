@@ -1,0 +1,104 @@
+! Xentra Router (hostname: Router) - UPDATED CONFIGURATION
+enable
+configure terminal
+no ip route 0.0.0.0 0.0.0.0 192.168.0.153
+interface Serial0/0/0
+ encapsulation frame-relay
+ no shutdown
+interface Serial0/0/0.102 point-to-point
+ ip address 10.0.1.1 255.255.255.252
+ frame-relay interface-dlci 102
+ no shutdown
+interface Serial0/0/0.103 point-to-point
+ ip address 10.0.2.1 255.255.255.252
+ frame-relay interface-dlci 103
+ no shutdown
+router ospf 1
+ router-id 1.1.1.1 
+ network 10.0.1.0 0.0.0.3 area 0        
+ network 10.0.2.0 0.0.0.3 area 0        
+ network 192.168.0.0 0.0.0.63 area 0    
+ network 192.168.0.64 0.0.0.63 area 0   
+ network 192.168.0.128 0.0.0.63 area 0  
+ network 192.168.0.192 0.0.0.63 area 0  
+ network 192.168.0.144 0.0.0.15 area 0  
+ network 192.168.0.152 0.0.0.3 area 0   
+end
+write memory
+
+! Home-Router
+enable
+configure terminal
+interface Serial0/0/0 
+ encapsulation frame-relay
+ no shutdown
+interface Serial0/0/0.201 point-to-point
+ ip address 10.0.1.2 255.255.255.252
+ frame-relay interface-dlci 201
+ no shutdown
+interface Serial0/0/0.203 point-to-point
+ ip address 10.0.3.1 255.255.255.252
+ frame-relay interface-dlci 203
+ no shutdown
+router ospf 1
+ router-id 2.2.2.2 
+ log-adjacency-changes
+ network 10.0.1.0 0.0.0.3 area 0         
+ network 10.0.3.0 0.0.0.3 area 0         
+ network 192.168.254.0 0.0.0.255 area 0  
+end
+write memory
+
+! ISP-Router Configuration
+enable
+configure terminal
+hostname ISP-Router
+interface Serial0/0/0
+ encapsulation frame-relay
+ no shutdown
+interface Serial0/0/0.301 point-to-point
+ ip address 10.0.2.2 255.255.255.252
+ frame-relay interface-dlci 301
+ no shutdown
+
+interface Serial0/0/0.302 point-to-point
+ ip address 10.0.3.2 255.255.255.252
+ frame-relay interface-dlci 302
+ no shutdown
+
+interface GigabitEthernet0/0
+ ip address 10.0.4.1 255.255.255.252
+ no shutdown
+router ospf 1
+ router-id 3.3.3.3
+ network 10.0.2.0 0.0.0.3 area 0        
+ network 10.0.3.0 0.0.0.3 area 0        
+ network 10.0.4.0 0.0.0.3 area 0        
+end
+write memory
+
+! Internet-Router Configuration
+enable
+configure terminal
+hostname Internet-Router
+
+interface GigabitEthernet0/0
+ ip address 10.0.4.2 255.255.255.252
+ no shutdown
+interface GigabitEthernet0/1
+ ip address 172.16.2.1 255.255.255.0
+ no shutdown
+router ospf 1
+ router-id 4.4.4.4 
+ log-adjacency-changes
+ network 10.0.4.0 0.0.0.3 area 0        
+ network 172.16.2.0 0.0.0.255 area 0    
+end
+write memory
+
+! CEU Web Server Configuration
+! On the Server device:
+! IP Address: 172.16.2.10
+! Subnet Mask: 255.255.255.0
+! Default Gateway: 172.16.2.1 (Internet-Router's Gi0/1 interface)
+! DNS Server: (e.g., 8.8.8.8 or an internal DNS if you have one)

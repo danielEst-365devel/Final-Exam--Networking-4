@@ -1,0 +1,64 @@
+!GRE Tunnel Configuration (Home to Xentra)
+
+! On Xentra Router (hostname: Router)
+enable
+configure terminal
+interface Tunnel0
+ ip address 100.100.100.1 255.255.255.252
+ tunnel source Serial0/0/0.102
+ tunnel destination 10.0.1.2  
+ no shutdown
+ip route 192.168.254.0 255.255.255.0 100.100.100.2
+exit
+end
+write memory
+
+! On Home-Router
+enable
+configure terminal
+interface Tunnel0
+ ip address 100.100.100.2 255.255.255.252
+ tunnel source Serial0/0/0.201    
+ tunnel destination 10.0.1.1      
+ no shutdown
+ip route 192.168.0.0 255.255.255.192 100.100.100.1   
+ip route 192.168.0.64 255.255.255.192 100.100.100.1  
+ip route 192.168.0.128 255.255.255.192 100.100.100.1 
+ip route 192.168.0.192 255.255.255.192 100.100.100.1 
+ip route 192.168.0.144 255.255.255.240 100.100.100.1 
+ip route 192.168.0.152 255.255.255.252 100.100.100.1 
+exit
+write memory
+
+!Access Control List (ACL)
+! On Xentra Router (hostname: Router)
+enable
+configure terminal
+ip access-list extended PERMIT_GRE_FROM_HOME_IN
+ permit gre host 10.0.1.2 host 10.0.1.1
+ deny ip any any
+interface Serial0/0/0.102
+ ip access-group PERMIT_GRE_FROM_HOME_IN in
+ip access-list extended BLOCK_EXTERNAL_TO_XENTRA_IN
+ deny ip any 192.168.0.0 0.0.0.63
+ deny ip any 192.168.0.64 0.0.0.63 
+ deny ip any 192.168.0.128 0.0.0.63 
+ deny ip any 192.168.0.192 0.0.0.63 
+ deny ip any 192.168.0.144 0.0.0.15 
+ deny ip any 192.168.0.152 0.0.0.3 
+ permit ip any any
+interface Serial0/0/0.103
+ ip access-group BLOCK_EXTERNAL_TO_XENTRA_IN in
+exit
+write memory
+
+! On Home-Router
+enable
+configure terminal
+ip access-list extended PERMIT_GRE_FROM_XENTRA_IN
+ permit gre host 10.0.1.1 host 10.0.1.2
+ deny ip any any 
+interface Serial0/0/0.201
+ ip access-group PERMIT_GRE_FROM_XENTRA_IN in
+exit
+write memory
